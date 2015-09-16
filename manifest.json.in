@@ -1,0 +1,15 @@
+{
+    "architecture": "@CLICK_ARCH@",
+    "description": "A simple Unity scope that accesses the network",
+    "framework": "ubuntu-sdk-15.04",
+    "hooks": {
+        "twitchtv": {
+            "apparmor": "twitchtv.apparmor",
+            "scope": "twitchtv"
+        }
+    },
+    "maintainer": "RPiAwesomeness <aeves.nate@gmail.com>",
+    "name": "twitchtv.rpiawesomeness",
+    "title": "twitchtv",
+    "version": "0.1"
+}

@@ -1,0 +1,13 @@
+# Below are some example settings. You can access your scope's
+# settings by calling settings() from the Query::run() method.
+# E.g. auto location = settings().at("location").get_string();
+
+[thumbnail]
+type = boolean
+defaultValue = false
+_displayName = Stream Thumbnails
+
+[results]
+type = number
+defaultValue = 10
+_displayName = Stream Results
