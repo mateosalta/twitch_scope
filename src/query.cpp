@@ -70,7 +70,7 @@ void Query::run(sc::SearchReplyProxy const& reply) {
     try {
 
         auto s_thumbnail = settings().at("thumbnail").get_bool();
-//        auto s_results = settings().at("results").get_int();
+        auto s_results = settings().at("results").get_string();
 
         // Start by getting information about the query
         const sc::CannedQuery &query(sc::SearchQueryBase::query());
@@ -81,10 +81,10 @@ void Query::run(sc::SearchReplyProxy const& reply) {
         Client::StreamRes streamslist;
         if (query_string.empty()) {
             // If the string is empty, provide a specific one
-            streamslist = client_.streams("development", s_thumbnail);/*, s_results);*/
+            streamslist = client_.streams("development", s_thumbnail, s_results);
         } else {
             // otherwise, use the query string
-            streamslist = client_.streams(query_string, s_thumbnail);/*, s_results);*/
+            streamslist = client_.streams(query_string, s_thumbnail, s_results);
         }
 
         // Register a category for tracks

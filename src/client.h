@@ -76,7 +76,7 @@ public:
     /**
      * Get the track list for a query
      */
-    virtual StreamRes streams(const std::string &query, const bool &s_thumbnail);
+    virtual StreamRes streams(const std::string &query, const bool &s_thumbnail, const std::string &s_results);
 
     /**
      * Cancel any pending queries (this method can be called from a different thread)

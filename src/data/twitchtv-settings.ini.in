@@ -8,6 +8,6 @@ defaultValue = false
 _displayName = Stream Thumbnails
 
 [results]
-type = number
+type = string
 defaultValue = 10
 _displayName = Stream Results

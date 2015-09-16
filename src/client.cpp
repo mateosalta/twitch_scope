@@ -73,7 +73,7 @@ int Client::IsLive(string &name){
 
 }
 
-Client::StreamRes Client::streams(const string &query, const bool &s_thumbnail) {
+Client::StreamRes Client::streams(const string &query, const bool &s_thumbnail, const string &s_results) {
     // This is the method that we will call from the Query class.
     // It connects to an HTTP source and returns the results.
     // In this case we are going to retrieve JSON data.
@@ -82,7 +82,7 @@ Client::StreamRes Client::streams(const string &query, const bool &s_thumbnail) 
     // Build a URI and get the contents.
     // The fist parameter forms the path part of the URI.
     // The second parameter forms the CGI parameters.
-    get( { "search", "streams" }, {{ "q", query }}, root);
+    get( { "search", "streams" }, {{ "q", query }, {"limit", s_results}}, root);
 
     StreamRes result;
 
