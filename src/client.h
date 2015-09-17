@@ -67,7 +67,7 @@ public:
         StreamList streams;
     };
 
-    int IsLive(std::string &name);
+    bool IsLive(std::string &name);
 
     Client(Config::Ptr config);
 
