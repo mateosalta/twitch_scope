@@ -6,6 +6,8 @@
 #include <core/net/http/response.h>
 #include <QVariantMap>
 #include <iostream>
+#include <QJsonObject>
+#include <QJsonValue>
 
 namespace http = core::net::http;
 namespace net = core::net;
@@ -58,27 +60,6 @@ void Client::get(const net::Uri::Path &path,
     }
 }
 
-bool Client::IsLive(string &name){
-
-    QJsonDocument root;
-
-    // Get the response from the channels/CHANNELNAME endpoint
-    get( { "streams", name }, {}, root );
-
-    // Convert the returned root JSON object to a QVariantMap (Dictionary, sorta)
-    QVariantMap variant = root.toVariant().toMap();
-    variant = variant["stream"].toMap();
-
-    std::cout << variant.size() << std::endl;
-
-    if (variant.size() > 0) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
 Client::StreamRes Client::streams(const string &query, const bool &s_thumbnail, const string &s_results) {
     // This is the method that we will call from the Query class.
     // It connects to an HTTP source and returns the results.
@@ -88,49 +69,31 @@ Client::StreamRes Client::streams(const string &query, const bool &s_thumbnail, 
     // Build a URI and get the contents.
     // The fist parameter forms the path part of the URI.
     // The second parameter forms the CGI parameters.
-    get( { "search", "channels" }, {{ "q", query }, {"limit", s_results}}, root);
+    get( { "search", "streams" }, {{ "q", query }, {"limit", s_results}}, root);
 
     StreamRes result;
 
     QVariantMap variant = root.toVariant().toMap();
 
     // Iterate through the stream data
-    for (const QVariant &i : variant["channels"].toList()) {
+    for (const QVariant &i : variant["streams"].toList()) {
 
         QVariantMap channel = i.toMap();
+        QVariantMap previews = channel["preview"].toMap();  // Get the map of previews
+        std::string viewers = channel["viewers"].toString().toStdString();
+        channel = channel["channel"].toMap();
 
         std::string name = channel["name"].toString().toStdString();
         std::string live = "";
 
-        // These only applicable if the stream is live
-        QVariantMap previews;
         std::string preview;
-        std::string viewers;
 
-        bool isLive = IsLive(name);
-
-        // Checks if the stream is live
-        if (isLive) {
-            std::cout << "TRUE" << std::endl;
-            live = "Live! - ";      // Set live to "Live! -" which will be prepended to the stream title later
-            previews = channel["preview"].toMap();  // Get the map of previews
-
-            // Check if the user wants us to retrieve a thumbnail
-            if (s_thumbnail) {
-                preview = previews["large"].toString().toStdString();
-            }
-            else {
-                preview = channel["logo"].toString().toStdString();
-            }
-
-            viewers = channel["viewers"].toString().toStdString();
-            channel = channel["streams"].toMap();
+        // Check if the user wants us to retrieve a thumbnail
+        if (s_thumbnail) {
+            preview = previews["medium"].toString().toStdString();
         }
         else {
-            std::cout << "FALSE" << std::endl;
-            live = "";
             preview = channel["logo"].toString().toStdString();
-            viewers = "Offline";
         }
 
         std::string mature = channel["mature"].toString().toStdString();
