@@ -57,6 +57,8 @@ void Preview::run(sc::PreviewReplyProxy const& reply) {
     else {
         // Set the image equal to the art - speed
         image.add_attribute_mapping("source", "art");
+        image.add_attribute_value("fallback",
+                                  sc::Variant("http://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_150x150.png"));
     }
 
 

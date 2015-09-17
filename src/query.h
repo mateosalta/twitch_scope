@@ -30,7 +30,6 @@ private:
 private:
     std::string s_results;
     bool s_thumbnail;
-    bool s_channels;
 };
 
 #endif // QUERY_H_

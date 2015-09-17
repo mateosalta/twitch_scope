@@ -71,7 +71,6 @@ void Query::run(sc::SearchReplyProxy const& reply) {
 
         auto s_thumbnail = settings().at("thumbnail").get_bool();
         auto s_results = settings().at("results").get_string();
-        auto s_channels = settings().at("channels").get_bool();
 
         // Start by getting information about the query
         const sc::CannedQuery &query(sc::SearchQueryBase::query());
@@ -85,69 +84,58 @@ void Query::run(sc::SearchReplyProxy const& reply) {
         if (query_string.empty()) {
             // If the string is empty, provide a default one
             streamslist = client_.streams("development", s_thumbnail, s_results);
-            if (s_channels) {
-                channelslist = client_.channels("development", s_results);
-            }
+            channelslist = client_.channels("development", s_results);
         } else {
             // otherwise, use the query string
             streamslist = client_.streams(query_string, s_thumbnail, s_results);
-
-            if (s_channels) {
-                channelslist = client_.channels(query_string, s_results);
-            }
+            channelslist = client_.channels(query_string, s_results);
         }
 
         // Register a category for channels and streams
         auto streams_cat = reply->register_category("streams", "Currently live!", "",
             sc::CategoryRenderer(STREAMS_TEMPLATE));
+        auto channels_cat = reply->register_category("channels", "Channels", "",
+            sc::CategoryRenderer(CHANNELS_TEMPLATE));
+
         // register_category(arbitrary category id, header title, header icon, template)
 
-        if (s_channels) {
+        for (const auto &channel : channelslist.channels) {
 
-            auto channels_cat = reply->register_category("channels", "Channels", "",
-                sc::CategoryRenderer(CHANNELS_TEMPLATE));
+            // Iterate over the trackslist
+            sc::CategorisedResult res(channels_cat);
 
-            for (const auto &stream : channelslist.channels) {
+            // We must have a URI
+            res.set_uri(channel.url);
 
-                // Iterate over the trackslist
-                sc::CategorisedResult res(channels_cat);
+            // We also need the track title
+            res.set_title(channel.name);
 
-                // We must have a URI
-                res.set_uri(stream.url);
+            // This takes care of non-existent custom art
+            std::string art404 = "http://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_150x150.png";
+            if (channel.logo != ""){
+                res.set_art(channel.logo);
+            }
+            else {
+                res.set_art(art404);
+            }
 
-                // We also need the track title
-                res.set_title(stream.name);
+            // Set the rest of the attributes, art, artist, etc
+            res["title"] = channel.name;
+            res["name"] = channel.channel.user;
+            res["url"] = channel.url;
+            res["game"] = channel.game;
+            res["thumb"] = channel.thumbnail;
 
-                // This takes care of non-existent custom art
-                std::string art404 = "http://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_150x150.png";
-                if (stream.logo != ""){
-                    res.set_art(stream.logo);
-                }
-                else {
-                    res.set_art(art404);
-                }
-
-                // Set the rest of the attributes, art, artist, etc
-                res["title"] = stream.name;
-
-                res["name"] = stream.channel.user;
-
-                res["url"] = stream.url;
-
-                res["game"] = stream.game;
-
-                res["thumb"] = stream.thumbnail;
-
-                // Push the result
-                if (!reply->push(res)) {
-                    // If we fail to push, it means the query has been cancelled.
-                    // So don't continue;
-                    return;
-                }
+            // Push the result
+            if (!reply->push(res)) {
+                // If we fail to push, it means the query has been cancelled.
+                // So don't continue;
+                return;
             }
         }
 
         for (const auto &stream : streamslist.streams) {
+
             // Iterate over the trackslist
             sc::CategorisedResult res(streams_cat);
 
@@ -160,8 +148,6 @@ void Query::run(sc::SearchReplyProxy const& reply) {
             // This takes care of non-existent custom art
             std::string art404 = "http://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_150x150.png";
 
-            std::cout << stream.logo << std::endl;
-
             if (stream.logo != ""){
                 res.set_art(stream.logo);
             }
@@ -171,17 +157,11 @@ void Query::run(sc::SearchReplyProxy const& reply) {
 
             // Set the rest of the attributes, art, artist, etc
             res["title"] = stream.name;
-
             res["name"] = stream.channel.user;
-
             res["url"] = stream.url;
-
             res["mature"] = "Mature: " + stream.mature;
-
             res["viewers"] = "Viewers: " + stream.viewers;
-
             res["game"] = stream.game;
-
             res["thumb"] = stream.thumbnail;
 
             // Push the result

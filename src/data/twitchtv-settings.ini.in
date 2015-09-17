@@ -11,8 +11,3 @@ _displayName = Stream Thumbnails
 type = string
 defaultValue = 10
 _displayName = Stream Results
-
-[channels]
-type = boolean
-defaultValue = true
-_displayName = Fetch Channels

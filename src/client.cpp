@@ -148,7 +148,12 @@ Client::ChannelRes Client::channels(const string &query, const string &s_results
         std::string preview;
 
         // Check if the user wants us to retrieve a thumbnail
-        preview = channel["logo"].toString().toStdString();
+        if (channel["logo"] != "") {
+            preview = channel["logo"].toString().toStdString();
+        }
+        else {
+            preview = "http://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_150x150.png";
+        }
 
         std::string mature = channel["mature"].toString().toStdString();
 
@@ -158,6 +163,11 @@ Client::ChannelRes Client::channels(const string &query, const string &s_results
         }
         else if (mature == "false"){
             mature = "No";
+        }
+
+        if (channel["status"].toString().toStdString() == "" || channel["game"].toString().toStdString() == "") {
+            // If those are empty, then it's one of those glitched streams, don't return it
+            continue;
         }
 
         // We add each result to our list
