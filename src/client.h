@@ -35,7 +35,7 @@ public:
     /**
     * Our Channel object.
     */
-    struct Channel {
+    struct ChanInfo {
         unsigned int id;
         std::string user;
     };
@@ -50,21 +50,40 @@ public:
         std::string url;        // Stream URL
         std::string logo;       // Stream Logo URL
         std::string mature;     // Is the stream mature
-        std::string isLive;     // Is the channel live
         std::string thumbnail;  // Stream thumbnail
-        Channel channel;
+        ChanInfo channel;
     };
+
+    /**
+    * Channel info, including the channel.
+    */
+    struct Channel {
+        std::string game;       // Channel Game
+        std::string name;       // Channel Name
+        std::string viewers;    // Stream Viewers
+        std::string url;        // Stream URL
+        std::string logo;       // Stream Logo URL
+        std::string mature;     // Is the stream mature
+        std::string thumbnail;  // Stream thumbnail
+        ChanInfo channel;
+    };
+
 
     /**
     * A list of Track objects.
     */
     typedef std::deque<Stream> StreamList;
+    typedef std::deque<Channel> ChannelList;
 
     /**
     * Track results.
     */
     struct StreamRes {
         StreamList streams;
+    };
+
+    struct ChannelRes {
+        ChannelList channels;
     };
 
     bool IsLive(std::string &name);
@@ -77,6 +96,7 @@ public:
      * Get the track list for a query
      */
     virtual StreamRes streams(const std::string &query, const bool &s_thumbnail, const std::string &s_results);
+    virtual ChannelRes channels(const std::string &query, const std::string &s_results);
 
     /**
      * Cancel any pending queries (this method can be called from a different thread)

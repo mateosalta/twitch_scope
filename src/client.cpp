@@ -83,9 +83,6 @@ Client::StreamRes Client::streams(const string &query, const bool &s_thumbnail, 
         std::string viewers = channel["viewers"].toString().toStdString();
         channel = channel["channel"].toMap();
 
-        std::string name = channel["name"].toString().toStdString();
-        std::string live = "";
-
         std::string preview;
 
         // Check if the user wants us to retrieve a thumbnail
@@ -115,14 +112,71 @@ Client::StreamRes Client::streams(const string &query, const bool &s_thumbnail, 
                 channel["url"].toString().toStdString(),
                 channel["logo"].toString().toStdString(),
                 mature,
-                live,
                 preview,
-                Channel {
+                ChanInfo {
                     channel["_id"].toUInt(),
                     channel["display_name"].toString().toStdString()
                 }
             }
         );
+    }
+
+    return result;
+}
+
+Client::ChannelRes Client::channels(const string &query, const string &s_results) {
+    // This is the method that we will call from the Query class.
+    // It connects to an HTTP source and returns the results.
+    // In this case we are going to retrieve JSON data.
+    QJsonDocument root;
+
+    // Build a URI and get the contents.
+    // The fist parameter forms the path part of the URI.
+    // The second parameter forms the CGI parameters.
+    get( { "search", "channels" }, {{ "q", query }, {"limit", s_results}}, root);
+
+    ChannelRes result;
+
+    QVariantMap variant = root.toVariant().toMap();
+
+    // Iterate through the stream data
+    for (const QVariant &i : variant["channels"].toList()) {
+
+        QVariantMap channel = i.toMap();
+
+        std::string viewers = "";
+        std::string preview;
+
+        // Check if the user wants us to retrieve a thumbnail
+        preview = channel["logo"].toString().toStdString();
+
+        std::string mature = channel["mature"].toString().toStdString();
+
+        // Convert boolean string from "true" or "false" to "Yes" or "No"
+        if (mature == "true"){
+            mature = "Yes";
+        }
+        else if (mature == "false"){
+            mature = "No";
+        }
+
+        // We add each result to our list
+        result.channels.emplace_back(
+            Channel {
+                channel["game"].toString().toStdString(),
+                channel["status"].toString().toStdString(),
+                viewers,
+                channel["url"].toString().toStdString(),
+                channel["logo"].toString().toStdString(),
+                mature,
+                preview,
+                ChanInfo {
+                    channel["_id"].toUInt(),
+                    channel["display_name"].toString().toStdString()
+                }
+            }
+        );
+
     }
 
     return result;

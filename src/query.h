@@ -29,8 +29,8 @@ private:
 
 private:
     std::string s_results;
-    // Disabled because we need to figure out basics first
-    std::string s_thumbnail;
+    bool s_thumbnail;
+    bool s_channels;
 };
 
 #endif // QUERY_H_
