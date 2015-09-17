@@ -1,14 +1,14 @@
 [ScopeConfig]
-_DisplayName=Twitch.tv
-_Description=This is a Twitch.tv scope for search Twitch.tv
+_DisplayName=Twitch
+_Description=Search Twitch livestreams and channels
 Art=screenshot.png
 Author=RPiAwesomeness
-Icon=logo.png
+Icon=icon.png
 
 [Appearance]
 PageHeader.Logo=logo.png
-PageHeader.Background = color:///#FFFFFF
-PageHeader.ForegroundColor = #74498b
+PageHeader.Background = color:///#8654a1
+PageHeader.ForegroundColor = #FFFFFF
 PageHeader.DividerColor = #8654a1
 BackgroundColor = #FFFFFF
 PreviewButtonColor = #74498b

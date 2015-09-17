@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-17 16:14-0400\n"
+"POT-Creation-Date: 2015-09-17 16:35-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../src/data/twitchtv.ini.in.h:1
-msgid "Twitch.tv"
+msgid "Twitch"
 msgstr ""
 
 #: ../src/data/twitchtv.ini.in.h:2
-msgid "This is a Twitch.tv scope for search Twitch.tv"
+msgid "Search Twitch livestreams and channels"
 msgstr ""
 
 #: ../src/data/twitchtv-settings.ini.in.h:1
