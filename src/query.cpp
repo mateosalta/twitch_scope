@@ -80,7 +80,7 @@ void Query::run(sc::SearchReplyProxy const& reply) {
 
         Client::StreamRes streamslist;
         if (query_string.empty()) {
-            // If the string is empty, provide a specific one
+            // If the string is empty, provide a default one
             streamslist = client_.streams("development", s_thumbnail, s_results);
         } else {
             // otherwise, use the query string
@@ -90,7 +90,6 @@ void Query::run(sc::SearchReplyProxy const& reply) {
         // Register a category for tracks
         auto streams_cat = reply->register_category("streams", "Streams", "",
             sc::CategoryRenderer(STREAMS_TEMPLATE));
-
         // register_category(arbitrary category id, header title, header icon, template)
 
         for (const auto &stream : streamslist.streams) {

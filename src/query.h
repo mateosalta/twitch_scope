@@ -28,8 +28,7 @@ private:
     Client client_;
 
 private:
-//    void initScope();
-//    int s_results;
+    std::string s_results;
     // Disabled because we need to figure out basics first
     std::string s_thumbnail;
 };
